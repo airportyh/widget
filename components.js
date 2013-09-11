@@ -79,12 +79,18 @@ NavItem = function(){
 
 NavBar = function(){
   var bar = {}
-  bar.element = B('ul')
+  bar.element = B('ul', {'class': 'nav-bar'})
   bar.add = function(thing){
     var item = NavItem()
     Widget.append(item, thing)
     Widget.append(bar, item)
   }
+  bar.styles = [
+    '.nav-bar { padding: 0; width: 100%; cursor: pointer; }', 
+    '.nav-bar label { cursor: pointer; }', 
+    '.nav-bar li { padding: 5px ; float: left; cursor: pointer; }',
+    '.nav-bar li.selected { background: #ddd; }',
+  ]
   return bar
 }
 
@@ -92,9 +98,11 @@ TabbedPanel = function(){
   var panel = {}
   var navBar = NavBar()
   var contents = []
-  panel.element = document.createElement('div')
-
+  var contentsPanel = B('div', {style: 'clear: both;'})
+  panel.element = B('div')
   Widget.append(panel, navBar)
+  panel.element.appendChild(contentsPanel)
+
   for (var i = 0; i < arguments.length; i++){
     var pair = arguments[i]
     var navItem = pair[0]
