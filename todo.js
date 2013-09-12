@@ -1,40 +1,50 @@
 var Stack = require('./stack')
-var TextField = require('./text_field')
+var OmniField = require('./omni_field')
 var A = require('./arrayhelpers')
 var Widget = require('./widget')
-var Label = require('./label')
-var Bug = require('./bug')
 var M = require('./messenger')
+var TaskView = require('./task_view')
+var Task = require('./task')
 
-var todos = [
+var todos = A.map([
   'water the lawn',
   'feed the baby',
   'pickup emma'
-]
+], Task)
 
-var textField
-var todoList
-var ui = Stack(
-  textField = OmniField(),
-  todoList = Stack.apply(null, A.map(todos, Label))
-)
+function UI(todos){
 
+  var textField
+  var todoList
+  var ui = Stack(
+    textField = OmniField(),
+    todoList = Stack(A.map(todos, makeTaskView))
+  )
 
+  M.on(textField, 'enter', function(){
+    addTask(textField.value())
+    textField.clear()
+  })
 
-function OmniField(){
-  var textField = TextField()
-  textField['element:keyup'] = function(e){
-    if (e.keyCode === 13){
-      addTask(textField.value())
-      textField.clear()
-    }
+  function makeTaskView(task){
+    var taskView = TaskView(task)
+    M.on(taskView, 'remove', function(){
+      A.remove(todos, task)
+      Widget.remove(todoList, taskView)
+    })
+    return taskView
   }
-  Bug.attach(textField)
-  return textField
+
+  function addTask(task){
+    todos.push(Task(task))
+    Widget.append(todoList, makeTaskView(Task(task)))
+  }
+
+  return ui
+
 }
 
-Widget.install(ui)
+Widget.install(UI(todos))
 
-function addTask(task){
-  Widget.append(todoList, Label(task))
-}
+
+

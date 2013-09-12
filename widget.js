@@ -1,5 +1,6 @@
 var DomHelper = require('./domhelper')
 var AppStyleSheet = require('./appstylesheet')
+var A = require('./arrayhelpers')
 
 var Widget = module.exports = {
   setText: function(w, text){
@@ -11,9 +12,17 @@ var Widget = module.exports = {
     }
     parent.children.push(child)
   },
+  removeChild: function(parent, child){
+    if (!parent.children) return
+    A.remove(parent.children, child)
+  },
   append: function(parent, child){
     parent.element.appendChild(child.element)
     Widget.addChild(parent, child)
+  },
+  remove: function(parent, child){
+    parent.element.removeChild(child.element)
+    Widget.removeChild(parent, child)
   },
   walk: function(w, visitor){
     if (!w) return

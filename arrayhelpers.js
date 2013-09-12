@@ -10,5 +10,10 @@ module.exports = {
       ret.push(fun(arr[i], i))
     }
     return ret
+  },
+  remove: function(arr, item){
+    var idx = arr.indexOf(item)
+    if (idx === -1) return
+    arr.splice(idx, 1)
   }
 }
