@@ -1,4 +1,4 @@
-AppStyleSheet = function(){
+module.exports = function(){
 
   var sm = {}
   var rules = {}

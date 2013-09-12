@@ -1,4 +1,4 @@
-var DomHelper = {
+module.exports = {
   setText: function(elm, text){
     if ('textContent' in elm){
       elm.textContent = text

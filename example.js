@@ -1,4 +1,16 @@
-
+var B = require('./bob')
+var Panel = require('./panel')
+var Form = require('./form')
+var Label = require('./label')
+var TextField = require('./text_field')
+var PasswordField = require('./password_field')
+var ToggleButton = require('./toggle_button')
+var Flow = require('./flow')
+var Stack = require('./stack')
+var TabbedPanel = require('./tabbed_panel')
+var Link = require('./link')
+var AppStyleSheet = require('./appstylesheet')
+var Widget = require('./widget')
 
 loginForm = Panel(
   Form(
@@ -23,7 +35,7 @@ twitter = Panel(
   Flow(
     Stack(
       Stack(
-        Label(Observable(user, 'name')),
+        Label('Toby Ho'),
         Label('View my profile page')
       ),
       Flow(
@@ -49,15 +61,4 @@ tabbedPanel = TabbedPanel(
   [Link('Register'), registerForm]
 )
 
-var styleSheet = AppStyleSheet()
-Widget.walk(tabbedPanel, function(w){
-  if (w.styles){
-    for (var i = 0; i < w.styles.length; i++){
-      styleSheet.addRule(w.styles[i])
-    }
-  }
-})
-
-styleSheet.install()
-
-document.body.appendChild(tabbedPanel.element)
+Widget.install(tabbedPanel)

@@ -1,4 +1,4 @@
-Bob = function(tagName){
+module.exports = function(tagName){
   var elm = document.createElement(tagName)
   for (var i = 1; i < arguments.length; i++){
     var arg = arguments[i]
