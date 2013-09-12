@@ -12,7 +12,7 @@ Panel = function(){
 
 Form = function(){
   var form = {}
-  form.element = B('table')
+  form.element = B('table', {'class': 'form'})
   for (var i = 0; i < arguments.length; i++){
     var pair = arguments[i]
     var row, cell1, cell2
@@ -77,41 +77,79 @@ NavItem = function(){
   return item
 }
 
+Stack = function(){
+  var stack = {element: B('stack')}
+  A.each(arguments, function(arg){
+    Widget.append(stack, arg)
+  })
+  stack.styles = [
+    'stack > * { display: block }'
+  ]
+  return stack
+}
+
+Flow = function(){
+  var flow = {element: B('flow')}
+  A.each(arguments, function(arg){
+    Widget.append(flow, arg)
+  })
+  flow.styles = [
+    'flow > * { display: inline-block }'
+  ]
+  return flow
+}
+
 NavBar = function(){
   var bar = {}
-  bar.element = B('ul', {'class': 'nav-bar'})
+  bar.element = B('ul', {'class': 'nav-bar flow'})
   bar.add = function(thing){
     var item = NavItem()
     Widget.append(item, thing)
     Widget.append(bar, item)
   }
   bar.styles = [
-    '.nav-bar { padding: 0; width: 100%; cursor: pointer; }', 
-    '.nav-bar label { cursor: pointer; }', 
-    '.nav-bar li { padding: 5px ; float: left; cursor: pointer; }',
-    '.nav-bar li.selected { background: #ddd; }',
+    '.nav-bar { padding: 0; }', 
+    '.nav-bar * { cursor: pointer; }', 
+    '.nav-bar li { padding: 5px; }',
+    '.nav-bar li.selected { background: #ddd; }'
   ]
   return bar
 }
 
-TabbedPanel = function(){
-  var panel = {}
-  var navBar = NavBar()
-  var contents = []
-  var contentsPanel = B('div', {style: 'clear: both;'})
-  panel.element = B('div')
-  Widget.append(panel, navBar)
-  panel.element.appendChild(contentsPanel)
+Link = function(text, href){
+  href = href || '#'
+  var link = {
+    element: B('a', {href: href}, text)
+  }
+  return link
+}
 
-  for (var i = 0; i < arguments.length; i++){
-    var pair = arguments[i]
+TabbedPanel = function(){
+  var panel
+  var navBar
+  var contentStack
+  var contents = []
+  
+  panel = Stack(
+    navBar = Flow(),
+    contentStack = Stack()
+  )
+
+  DomHelper.addClass(navBar.element, 'nav-bar')
+  DomHelper.addClass(contentStack.element, 'content')
+
+  panel.styles = [
+    '.nav-bar > * { margin: 5px; }'
+  ]
+  
+  A.each(arguments, function(pair, i){
     var navItem = pair[0]
     var content = pair[1]
     contents.push(content)
     setup(navItem, content, i === 0)
-    navBar.add(navItem)
-    Widget.append(panel, content)
-  }
+    Widget.append(navBar, navItem)
+    Widget.append(contentStack, content)
+  })
 
   function setup(navItem, content, initiallyVisible){
     navItem['element:click'] = function(){
