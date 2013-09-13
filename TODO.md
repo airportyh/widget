@@ -13,6 +13,6 @@ Nice and small files.
 
 ### TODO
 
-* TODOMVC
+* TODOMVC - implement storage
 * reproduce the Twitter layout
 * how to do property binding
