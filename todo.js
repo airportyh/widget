@@ -8,24 +8,32 @@ var Task = require('./task')
 var Text = require('./text')
 var Flow = require('./flow')
 var prop = require('./prop')
+var Link = require('./link')
+var FilterBar = require('./filter_bar')
+var FilterableArray = require('./filterable_array')
 
-var todos = A.map([
+var todos = FilterableArray(A.map([
   'water the lawn',
   'feed the baby',
   'pickup emma'
-], Task)
+], Task))
 
 function UI(todos){
 
   var textField
   var todoList
   var countText
+  var filterBar
+
+  var viewableTodos = todos
+
   var ui = Stack(
     textField = OmniField(),
     todoList = Stack(A.map(todos, makeTaskView)),
     Flow(
-      countText = Text(todos.length),
-      Text(' items left')
+      countText = Text(viewableTodos.length),
+      Text(' items left'),
+      filterBar = FilterBar()
     )
   )
 
@@ -47,6 +55,24 @@ function UI(todos){
     return taskView
   }
 
+  M.on(todos, 'change', function(){
+    updateTaskViews()
+  })
+
+  M.on(filterBar, 'change', function(hash){
+    if (hash === '#active'){
+      todos.setFilter(function(task){
+        return !task.done
+      })
+    }else if (hash === '#completed'){
+      todos.setFilter(function(task){
+        return task.done
+      })
+    }else{
+      todos.setFilter(null)
+    }
+  })
+
   function addTask(task){
     todos.push(Task(task))
     Widget.append(todoList, makeTaskView(Task(task)))
@@ -58,11 +84,16 @@ function UI(todos){
     countText.setText(undoneTasks.length)
   }
 
+  function updateTaskViews(){
+    Widget.removeAllChildren(todoList)
+    A.each(todos, function(task){
+      Widget.append(todoList, makeTaskView(task))
+    })
+    updateCountText()
+  }
+
   return ui
 
 }
 
 Widget.install(UI(todos))
-
-
-

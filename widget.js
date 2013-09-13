@@ -16,6 +16,12 @@ var Widget = module.exports = {
     if (!parent.children) return
     A.remove(parent.children, child)
   },
+  removeAllChildren: function(w){
+    A.each(w.children, function(child){
+      w.element.removeChild(child.element)  
+    })
+    w.children = []
+  },
   append: function(parent, child){
     parent.element.appendChild(child.element)
     Widget.addChild(parent, child)
