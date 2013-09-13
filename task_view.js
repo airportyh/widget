@@ -23,10 +23,10 @@ module.exports = function TaskView(task){
     }else{
       DomHelper.removeClass(view.element, 'done')
     }
+    M.emit(view, 'check')
   })
 
   M.on(rmButton, 'click', function(){
-    console.log('emitted remove')
     M.emit(view, 'remove')
   })
 

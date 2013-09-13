@@ -1,4 +1,4 @@
-module.exports = function(tagName){
+module.exports = function Bob(tagName){
   var elm = document.createElement(tagName)
   for (var i = 1; i < arguments.length; i++){
     var arg = arguments[i]
@@ -14,7 +14,7 @@ module.exports = function(tagName){
       // treat as text content
       elm.appendChild(document.createTextNode(arg))
     }else{
-      throw new Error('Don\'t know how to handle argument', arg)
+      throw new Error('Don\'t know how to handle argument' + i + ': ' + arg)
     }
   }
   return elm
