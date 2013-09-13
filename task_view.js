@@ -11,13 +11,14 @@ module.exports = function TaskView(task){
   var rmButton
   var view = Flow(
     {'class': 'task'},
-    checkbox = CheckBox(),
+    checkbox = CheckBox(task.done),
     label = Label(task.name),
     rmButton = Button('x')
   )
   
   M.on(checkbox, 'change', function(){
     task.done = checkbox.value()
+    M.emit(task, 'change')
     if (task.done){
       DomHelper.addClass(view.element, 'done')
     }else{

@@ -20,6 +20,10 @@ module.exports = function FilterableArray(arr){
     update()
   }
 
+  fa.indexOf = function(obj){
+    return viewable.indexOf(obj)
+  }
+
   update()
   function update(){
     for (var i = 0; i < viewable.length; i++){
