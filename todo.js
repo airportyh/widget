@@ -9,6 +9,7 @@ var Flow = require('./flow')
 var FilterBar = require('./filter_bar')
 var FilterableArray = require('./filterable_array')
 var TasksView = require('./tasks_view')
+var TodoCount = require('./todo_count')
 
 var todos = FilterableArray(A.map([
   'water the lawn',
@@ -17,40 +18,16 @@ var todos = FilterableArray(A.map([
 ], Task))
 
 function UI(todos){
-
-  var textField
-  var tasksView
-  var countText
-  var filterBar
-
-  var ui = Stack(
-    textField = OmniField(),
-    tasksView = TasksView(todos),
+  
+  return Stack(
+    OmniField(todos),
+    TasksView(todos),
     Flow(
-      countText = Text(todos.length),
+      TodoCount(todos),
       Text(' items left'),
-      filterBar = FilterBar(todos)
+      FilterBar(todos)
     )
   )
-
-  M.on(textField, 'enter', function(){
-    addTask(textField.value())
-    textField.clear()
-  })
-
-  M.on(todos, 'change', updateCountText)
-
-  function addTask(task){
-    var t = Task(task)
-    todos.push(t)
-  }
-
-  function updateCountText(){
-    var undoneTasks = A.filter(todos, function(t){ return !t.done })
-    countText.setText(undoneTasks.length)
-  }
-
-  return ui
 
 }
 
